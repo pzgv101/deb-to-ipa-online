@@ -11,7 +11,7 @@ jobs:
   run:
     runs-on: ubuntu-latest
 
-    steps:
+    steps: # <--- Only one steps block defined here
       - name: Convert deb to IPA
         run: |
           curl -L -o ${{ github.workspace }}/app.deb "${{ github.event.inputs.deb }}"
@@ -24,8 +24,7 @@ jobs:
           zip -r ${{ github.workspace }}/App.ipa .
 
       - name: Upload Artifacts
-  uses: actions/upload-artifact@v4
-  with:
-    name: my-artifact
-    path: dist/
-
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-artifact
+          path: ${{ github.workspace }}/App.ipa # <--- Updated this path to match your generated file!
