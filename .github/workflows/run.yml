@@ -12,9 +12,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps: # <--- Only one steps block defined here
-      - name: Convert deb to IPA
+           - name: Convert deb to IPA
         run: |
-          curl -L -o ${{ github.workspace }}/app.deb "${{ github.event.inputs.deb }}"
+          DEB_URL="${{ github.event.inputs.deb }}"
+          
+          # Validate that a URL was provided
+          if [ -z "$DEB_URL" ]; then
+            echo "Error: No deb URL provided"
+            exit 1
+          fi
+          
+          echo "Downloading from: $DEB_URL"
+          curl -L -o ${{ github.workspace }}/app.deb "$DEB_URL"
           dpkg-deb -X ${{ github.workspace }}/app.deb ${{ github.workspace }}/app
 
           mkdir -p ${{ github.workspace }}/ipa/Payload
